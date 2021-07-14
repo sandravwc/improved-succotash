@@ -126,10 +126,10 @@ fi
 # Change Log
 #=====================================================================
 # improved-succotash.sh V1 (2021-07-09)
-#     - fix mysql and mysqldump warn message behaviour by substituting defaults file (MaRz)
-#     - fix bug where listing databases and tables with all option didn't take port as argument (MaRz)
-#     - add option to quiet compression option if no comperession is set (MaRz)
-#     - add option to quiet rotation messages (MaRz)
+#     - fix mysql and mysqldump warn message behaviour by substituting defaults file ()
+#     - fix bug where listing databases and tables with all option didn't take port as argument ()
+#     - add option to quiet compression option if no comperession is set ()
+#     - add option to quiet rotation messages ()
 #
 # feel free to fuck around with the script down here
 #
@@ -792,7 +792,8 @@ eval ${RM} -f "${LOGERR}"
 exit ${STATUS}
 
 # todo: make use of getopts
-# todo: make rotation variable
+# todo: make rotation retention period variable
 # todo: get rid of log handling in this script
 # todo: add support for backing up multiple servers
-#
+# todo: don't store passwords in plain text
+# todo: use something that isn't gzip or bzip2
