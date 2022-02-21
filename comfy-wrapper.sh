@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 VER="1.1"
 
 PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/local/mysql/bin:/root/bin
