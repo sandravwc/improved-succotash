@@ -1,0 +1,26 @@
+VER 3.0 (2022-02-28)
+     - changelog skipps 2.0 (duh)
+     - remove diff check
+     - complexify code so only marek can understand
+     - stip check and fetch of functions, do everything in a nested loop
+     - lint with shellcheck
+     - set fix unix timestamp for not found folders; any not found folder will seem VERY old 
+
+VER 1.2 (2021-11-22)
+     - fixed major bug with the daily/weekly/monthly diff generation
+2021-11-24
+     - fix typos
+     - add /root/bin to path
+
+VER 1.1 (2021-11-17)
+     - dandify diff_backup () function and help () function
+     - add conditional for printing diff
+     - modify diff function so ls doesn't try to list nonexistent folders 
+     - add plesk detect
+
+     
+VER 1.0 (2021-11-16)
+     - add diff detection // script now checks if there are any diffs between backup as defined in multimysqlbackup conf and backup as present on file system
+     - add path var and full bin paths
+     - add recursive multimysqlbackup conf parsing
+     - cloned from p-s/nagios-checks/check_mysql_files

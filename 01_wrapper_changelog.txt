@@ -1,0 +1,23 @@
+VER 1.2 (2021-11-26)
+     - multi has now a help dialog
+     - pass localhost as 127.0.0.1 if there is a port specified in multimysqlbackup.conf
+
+
+VER 1.1 (2021-11-19)
+     - getopts
+          * '-c' takes conf path as argument. can be either a file or a folder containing multiple files
+          * '-l' binary switch // enables lock file creation
+          * '-a' binary switch // enables plesk detection
+          * '-s' binary switch // disables error reporting 
+          * '-h' binary switch // sets the HELP variable to 1
+     - lockfile depending on operating system
+2021-11-24
+     - fix typos
+     - add /root/bin to path
+
+
+VER 1.0 (2021-11-16)
+     - add recursive multimysqlbackup conf parsing
+     - dandify shell substitutions and if loops by using more modern best practices
+     - add obligatory conf file check // conf options are now stored in a array and asigned + exported in a for loop
+     - add path var and full bin paths

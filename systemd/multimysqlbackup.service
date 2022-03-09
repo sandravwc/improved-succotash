@@ -1,0 +1,13 @@
+[Unit]
+Description=multimysqlbackup
+Wants=multimysqlbackup.timer
+
+[Service]
+Type=simple
+User=root
+Group=root
+ExecStart=/usr/bin/sh -c "/usr/local/bin/multimysqlbackup -c /usr/local/etc/ixsqlbackup.conf.d/multimysqlbackup.conf"
+SyslogIdentifier=multimysqlbackup
+
+[Install]
+WantedBy=multi-user.target

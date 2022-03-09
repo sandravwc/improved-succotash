@@ -1,0 +1,10 @@
+[Unit]
+Description=multimysqlbackup
+Requires=multimysqlbackup.service
+
+[Timer]
+Unit=multimysqlbackup.service
+OnCalendar=*-*-* 04:30:00
+
+[Install]
+WantedBy=timers.target

@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+OPTS=(DBHOST USERNAME PASSWORD DBNAMES DBEXCLUDE TABLEEXLUDE)
 tmp=/tmp/check_mysql_dumps
 diff_stat=0
 stat_diff_daily=0
@@ -114,12 +115,6 @@ done
 }
 
 
-
-
-[[ ${DDATEM} == 530 ]] && fetch_tables 
-[[ ${DDATEM} == 1000 ]] && check_diffs
-
-
 print_diff_daily () {
 	for ((i=0;i<${#diff_daily[@]};i++))
 	do
@@ -156,3 +151,5 @@ print_diff () {
 	0) ${ECHO} -n "" ;;
 	esac
 }
+
+

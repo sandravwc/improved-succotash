@@ -1,4 +1,18 @@
 #!/usr/bin/env bash
+# multimysqlbackup
+# wrapper for ixsqlbackup
+# VER 1.1
+# Upstream URL: https://gitlab.muc.internetx.com/p-s/rpm/ixsqlbackup
+#
+#################################################################
+# based on                                                      #
+#################################################################
+# MySQL Backup Script                                           #
+# VER. 2.6.8 - http://sourceforge.net/projects/automysqlbackup/ #
+# Copyright (c) 2002-2003 wipe_out@lycos.co.uk                  #
+#################################################################
+#set -x
+
 VER="1.1"
 
 PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/local/mysql/bin:/root/bin
@@ -18,7 +32,7 @@ IXSQLBACKUP=$(${WHICH} ixsqlbackup)
 opts=0
 OPTS=(DBHOST USERNAME PASSWORD DBNAMES DBEXCLUDE TABLEEXLUDE COMP QUIETROTA)
 
-while getopts c:lsh locs
+while getopts c:lash locs
 do
 	case $locs in
 		c)	
@@ -26,6 +40,9 @@ do
 		    ;;
 		l)	
 		    LOCKJOB=1 && opts=$((${opts}+1))
+			;;
+		a)  
+		    AUTOPLESKBACKUP=1 && opts=$((${opts}+1))
 			;;
 		s)  
 		    SILENTERROR=1 && opts=$((${opts}+1))
@@ -46,6 +63,8 @@ ${ECHO} -en "Usage:
 \t default configuration under /usr/local/etc/ixsqlbackup.conf.d/multimysqlbackup.conf \n
 \t $0 -l  
 \t binary switch // enables lock file creation \n
+\t $0 -a
+\t binary switch // enables plesk db auto detection \n
 \t $0 -s
 \t binary swich // disables error reports from multimysqlbackup \n
 \t $0 -h
@@ -57,6 +76,7 @@ ${ECHO} -en "Usage:
 [[ ${HELP} == 1 ]] && help
 [[ ! ${CONFPATH} ]] && CONFPATH=/usr/local/etc/ixsqlbackup.conf.d/multimysqlbackup.conf
 [[ ! ${LOCKJOB} ]] && LOCKJOB=0
+[[ ! ${AUTOPLESKBACKUP} ]] && AUTOPLESKBACKUP=0q
 [[ ! ${SILENTERROR} ]] && SILENTERROR=0
 
 if [[ ! $(${UNAME} -o | ${GREP} -i linux) ]] ; then
@@ -98,5 +118,37 @@ if [[ -s "${CONFPATH}" ]] ; then
 	else
 	if [[ ${SILENTERROR} == 0 ]] ; then
 		${ECHO} "Config file not found: ${CONFPATH} (skipping)"
+	fi
+fi
+
+if [[ ${AUTOPLESKBACKUP} == 1 ]] ; then
+	# plesk autodetection
+	if [[ -s /usr/local/psa/version ]] && [[ -s /etc/psa/.psa.shadow ]] ; then
+
+		export DBHOST="localhost"
+		export DBPORT="3306"
+		export USERNAME="admin"
+		export PASSWORD=`cat /etc/psa/.psa.shadow`
+		export DBNAMES="all"
+		export DBEXCLUDE=""
+		export TABLEEXCLUDE=""
+		export COMP="bzip2"
+		export QUIETROTA="no"
+		if [[ ! -f /var/lock/${DBHOST}.lock ]] && [[ ${LOCKJOB} == 1 ]] ; then
+
+			${TOUCH} /var/lock/${DBHOST}.lock
+			${SH} -c "${IXSQLBACKUP}"
+			${RM} -f /var/lock/${DBHOST}.lock
+
+		elif [[ ${LOCKJOB} == 0 ]] ; then
+			${SH} -c "${IXSQLBACKUP}"
+		else
+			${ECHO} "LOCKJOB is enabled and /var/lock/${DBHOST}.lock file  was found, please check! Script skips backup for host: ${DBHOST}"
+			exit 3
+		fi
+	else
+		if [[ "${SILENTERROR}" == 0 ]] ; then
+			${ECHO} "Plesk configuration not found: /usr/local/psa/version & /etc/psa/.psa.shadow (skipping)"
+		fi
 	fi
 fi

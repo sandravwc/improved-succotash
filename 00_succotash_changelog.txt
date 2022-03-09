@@ -1,0 +1,85 @@
+VER 2.1 (2021-12-14)
+     - simplify the main backup case
+     - dandify mysql and mysqldump options
+     - seperate LOGDIR from BACKDIR
+     - change NO_REVERSEPATH to REVERSEPATH and invert its value assignment
+     - move rotation from main backup case to functions sepdir() and 1_4_all()
+     - move code around // all functions are now defined before any execution part and in logical order
+     - make the rotate() function more compact
+     - rotate() now rotates one file at a time 
+     - more verbose logging settings possible
+
+
+VER 2.0.4 (2021-11-25)
+     - reverting 'defaults-file' vs 'defaults-extra-file' from 1.1 because using 'defaults-file' is stupid
+2021-11-26
+     - make opt function more pretty to read
+
+
+VER 2.0.3 (2021-11-24)
+     - add option to skip RFC 5321 reverse-path support via the NO_REVERSEPATH option so people dont need do fix pkg on their ancient pdp11's
+
+
+VER 2.0.2 (2021-11-17)
+     - disable gtid support in mysqldump
+     - add s-nail support and change reverse-path error message because the previous one sucked
+     - fix mmail error grep // add regex to catch more cases if -r option isn't available
+     - fix logfile names
+     - change sed behaviour // change delimiters from '/' to '#' and replace '\b' word boundry by bra-ket
+2021-11-24
+     - minor change in some boolean expressions
+     - change config path from multimysqlbackup to ixsqlbackup
+     - exception handle for bsd readlink...
+     - add /root/bin to path
+     - change some more sed syntax stuff to posix standards
+
+
+VER 2.0.1 (2021-11-16)
+     - minor fix for enterprise linux 8.5 which behaviour
+
+
+VER 2.0 (2021-11-09)
+     - backup logic rewritten // now we use backup functions with arguments embedded in a case statemment instead of bloated ifs
+       with lots of redundant code
+     - seperate dir backup and all-database backup are now both written as generic functions which take arguments for monthly weekly 
+       and daily backups
+     - folder creation is now a part of generic backup functions 
+     - fixed a bug where finished monthly backups didn't exit backup procedure which resulted in both monthly and daily backup taken
+       on monthly schedule
+     - backup retention is now a configurable via daily weekly and monthly rotation retention
+     - backup folder names are now generic for daily weekly and monthly backups
+     - remove MDB procedures // monthly backups are now the same as daily and weekly 
+
+
+VER 1.2.0 (2021-11-05)
+     - fix echo code style // echo payloads are now in double quotes to prevent annoyances in text editors
+     - remove rotation logic from backup procedures. instead, save backup exit status and rotate files after all backups are finished 
+        (pertable backups)
+     - add rotation bash function
+  
+
+VER 1.1.1 - (2021-11-04)
+     - replace ifs with case
+     - replace some more ifs with simple bools
+     - rewrite pre and postbackup      
+
+
+VER 1.1 - (2021-11-03)
+     - remove debian specific mysql credentials code as we use multimysqlbackup for passing passwords 
+     - remove "LATEST" routines // LATEST keeps latest backup copy in some other preconfigured folder
+     - dandify shell substitutions and if loops by using more modern best practices
+     - replace simple if loops by boolean expressions
+     - replace minus signs by underscores in file names
+     - remove pipecomp yes from default // PIPECOMP=no is now default
+     - move changelog and documentation into separate files
+     - standardized function declarations are now in place
+     - remove some useless comments       
+
+
+ VER 1.0 - (2021-08-23)
+     - fix mysql and mysqldump warn message behaviour by substituting defaults file
+     - fix bug where listing databases and tables with all option didn't take port as argument
+     - add option to quiet compression option if no compression is set
+     - add option to quiet rotation messages
+     - enable pre/post backup script for possible limitation of backup cycles
+     - fix logging to backup target directory at initial backup run (create missing directory)
