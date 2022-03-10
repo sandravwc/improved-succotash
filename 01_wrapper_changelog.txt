@@ -1,5 +1,6 @@
-VER 2.1 (2022-03-10)
+VER 2.0 (2022-03-10)
      - move from gitlab to github and change some names so the project becomes more personal
+     - remove plesk auto shitcode
 
 VER 1.2 (2021-11-26)
      - multi has now a help dialog
