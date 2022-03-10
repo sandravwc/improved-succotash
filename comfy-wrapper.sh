@@ -4,13 +4,6 @@
 # VER 2.0
 # Upstream URL: https://github.com/sandravwc/improved-succotash
 #
-#################################################################
-# based on                                                      #
-#################################################################
-# MySQL Backup Script                                           #
-# VER. 2.6.8 - http://sourceforge.net/projects/automysqlbackup/ #
-# Copyright (c) 2002-2003 wipe_out@lycos.co.uk                  #
-#################################################################
 #set -x
 VER="2.0"
 PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/local/mysql/bin:/root/bin
@@ -35,24 +28,12 @@ op1 () {
 while getopts c:lshd input
 do
     case "${input}" in
-        c)
-            CONFPATH=$OPTARG && op1
-            ;;
-        l)
-            LOCKJOB=1 && op1
-            ;;
-        s)
-            SILENTERROR=1 && op1
-            ;;
-        h)
-            HELP=1 && op1
-            ;;
-        d)
-            DEBUG=1 && op1
-            ;;
-        ?)
-            ${ECHO} "excuse me?" 
-            ;;
+        c) CONFPATH=$OPTARG && op1 ;;
+        l) LOCKJOB=1 && op1 ;;
+        s) SILENTERROR=1 && op1 ;;
+        h) HELP=1 && op1 ;;
+        d) DEBUG=1 && op1 ;;
+        ?) ${ECHO} "excuse me?" ;;
     esac
 done
 
