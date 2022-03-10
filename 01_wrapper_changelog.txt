@@ -1,3 +1,6 @@
+VER 2.1 (2022-03-10)
+     - move from gitlab to github and change some names so the project becomes more personal
+
 VER 1.2 (2021-11-26)
      - multi has now a help dialog
      - pass localhost as 127.0.0.1 if there is a port specified in multimysqlbackup.conf

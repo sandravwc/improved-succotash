@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# multimysqlbackup
-# wrapper for ixsqlbackup
+# comfy-wrapper.sh
+# wrapper for improved-succotash
 # VER 1.1
-# Upstream URL: https://gitlab.muc.internetx.com/p-s/rpm/ixsqlbackup
+# Upstream URL: https://github.com/sandravwc/improved-succotash
 #
 #################################################################
 # based on                                                      #
@@ -12,11 +12,8 @@
 # Copyright (c) 2002-2003 wipe_out@lycos.co.uk                  #
 #################################################################
 #set -x
-
 VER="1.1"
-
 PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/local/mysql/bin:/root/bin
-
 ENV=$(which env)
 WHICH=$(${ENV} which which)
 GREP=$(${WHICH} grep)
@@ -28,33 +25,39 @@ TOUCH=$(${WHICH} touch)
 MKDIR=$(${WHICH} mkdir)
 RM=$(${WHICH} rm)
 UNAME=$(${WHICH} uname)
-IXSQLBACKUP=$(${WHICH} ixsqlbackup)
+SUCCOTASH=$(${WHICH} succotash)
 opts=0
 OPTS=(DBHOST USERNAME PASSWORD DBNAMES DBEXCLUDE TABLEEXLUDE COMP QUIETROTA)
 
-while getopts c:lash locs
+op1 () {
+	opts=$((opts+1))
+}
+
+while getopts c:lshd input
 do
-	case $locs in
+	case "${input}" in
 		c)	
-		    CONFPATH=$OPTARG && opts=$((${opts}+1))
+		    CONFPATH=$OPTARG && op1
 		    ;;
 		l)	
-		    LOCKJOB=1 && opts=$((${opts}+1))
-			;;
-		a)  
-		    AUTOPLESKBACKUP=1 && opts=$((${opts}+1))
+		    LOCKJOB=1 && op1
 			;;
 		s)  
-		    SILENTERROR=1 && opts=$((${opts}+1))
+		    SILENTERROR=1 && op1
 			;;
 		h)	
-		    HELP=1 && opts=$((${opts}+1))
+		    HELP=1 && op1
+			;;
+		d)
+		    DEBUG=1 && op1
 			;;
 		?)	
 		    ${ECHO} "excuse me?" 
 			;;
 	esac
 done
+
+[[ ${DEBUG} == 1 ]] && set -x
 
 help () {
 ${ECHO} -en "Usage:
@@ -76,7 +79,6 @@ ${ECHO} -en "Usage:
 [[ ${HELP} == 1 ]] && help
 [[ ! ${CONFPATH} ]] && CONFPATH=/usr/local/etc/ixsqlbackup.conf.d/multimysqlbackup.conf
 [[ ! ${LOCKJOB} ]] && LOCKJOB=0
-[[ ! ${AUTOPLESKBACKUP} ]] && AUTOPLESKBACKUP=0q
 [[ ! ${SILENTERROR} ]] && SILENTERROR=0
 
 if [[ ! $(${UNAME} -o | ${GREP} -i linux) ]] ; then
@@ -106,7 +108,7 @@ if [[ -s "${CONFPATH}" ]] ; then
 		if [[ ! -f ${LOCK}/${DBHOST}.lock && ${LOCKJOB} == 1 ]] ; then
 			[[ ! -d ${LOCK} ]] && ${MKDIR} -p ${LOCK}
 			${TOUCH} ${LOCK}/${DBHOST}.lock
-			${SH} -c "${IXSQLBACKUP}"
+			${SH} -c "${SUCCOTASH}"
 			${RM} -f ${LOCK}/${DBHOST}.lock
 		elif [[ ${LOCKJOB} == 0 ]] ; then
 			${SH} -c "${IXSQLBACKUP}"
@@ -118,37 +120,5 @@ if [[ -s "${CONFPATH}" ]] ; then
 	else
 	if [[ ${SILENTERROR} == 0 ]] ; then
 		${ECHO} "Config file not found: ${CONFPATH} (skipping)"
-	fi
-fi
-
-if [[ ${AUTOPLESKBACKUP} == 1 ]] ; then
-	# plesk autodetection
-	if [[ -s /usr/local/psa/version ]] && [[ -s /etc/psa/.psa.shadow ]] ; then
-
-		export DBHOST="localhost"
-		export DBPORT="3306"
-		export USERNAME="admin"
-		export PASSWORD=`cat /etc/psa/.psa.shadow`
-		export DBNAMES="all"
-		export DBEXCLUDE=""
-		export TABLEEXCLUDE=""
-		export COMP="bzip2"
-		export QUIETROTA="no"
-		if [[ ! -f /var/lock/${DBHOST}.lock ]] && [[ ${LOCKJOB} == 1 ]] ; then
-
-			${TOUCH} /var/lock/${DBHOST}.lock
-			${SH} -c "${IXSQLBACKUP}"
-			${RM} -f /var/lock/${DBHOST}.lock
-
-		elif [[ ${LOCKJOB} == 0 ]] ; then
-			${SH} -c "${IXSQLBACKUP}"
-		else
-			${ECHO} "LOCKJOB is enabled and /var/lock/${DBHOST}.lock file  was found, please check! Script skips backup for host: ${DBHOST}"
-			exit 3
-		fi
-	else
-		if [[ "${SILENTERROR}" == 0 ]] ; then
-			${ECHO} "Plesk configuration not found: /usr/local/psa/version & /etc/psa/.psa.shadow (skipping)"
-		fi
 	fi
 fi
