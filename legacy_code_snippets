@@ -1,0 +1,33 @@
+### plesk autodetect shitzle
+
+if [[ ${AUTOPLESKBACKUP} == 1 ]] ; then
+	# plesk autodetection
+	if [[ -s /usr/local/psa/version ]] && [[ -s /etc/psa/.psa.shadow ]] ; then
+
+		export DBHOST="localhost"
+		export DBPORT="3306"
+		export USERNAME="admin"
+		export PASSWORD=$(cat /etc/psa/.psa.shadow)
+		export DBNAMES="all"
+		export DBEXCLUDE=""
+		export TABLEEXCLUDE=""
+		export COMP="bzip2"
+		export QUIETROTA="no"
+		if [[ ! -f /var/lock/${DBHOST}.lock ]] && [[ ${LOCKJOB} == 1 ]] ; then
+
+			${TOUCH} /var/lock/${DBHOST}.lock
+			${SH} -c "${IXSQLBACKUP}"
+			${RM} -f /var/lock/${DBHOST}.lock
+
+		elif [[ ${LOCKJOB} == 0 ]] ; then
+			${SH} -c "${IXSQLBACKUP}"
+		else
+			${ECHO} "LOCKJOB is enabled and /var/lock/${DBHOST}.lock file  was found, please check! Script skips backup for host: ${DBHOST}"
+			exit 3
+		fi
+	else
+		if [[ "${SILENTERROR}" == 0 ]] ; then
+			${ECHO} "Plesk configuration not found: /usr/local/psa/version & /etc/psa/.psa.shadow (skipping)"
+		fi
+	fi
+fi
