@@ -1,22 +1,17 @@
 # improved-succotash
-mysqlbackup script completly based on automysqlbackup 2.6.8 
-
-*written for work purposes
+stuff just happend as i figured out that automysqlbackup doesn't let you set destination port for your SQL server...
 
 
-*use multi to wrap around ix if you have multiple databases to dump
+*use wrapper to wrap around succotash if you have multiple databases to dump 
 
 
-*gentle-checker might be used with nagios or something
+*gentle-checker might be used with nagios or something. needs wrapper conf in order to work.
 
 
-*broken-differ, well, diffs mysql output vs. what you have on disk
+*broken-differ, well, diffs mysql output vs. what you have on disk. needs to be rewritten because it didnt work well. 
 
 configuration files included in conf
-
-
 # install
-
 clone repo and run install.bash
 
 
