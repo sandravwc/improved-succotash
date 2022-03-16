@@ -1,5 +1,5 @@
 # improved-succotash
-stuff just happend as i figured out that automysqlbackup doesn't let you set destination port for your SQL server...
+stuff just happend as i figured out that automysqlbackup2.x doesn't let you set destination port for your SQL server...
 
 
 *use wrapper to wrap around succotash if you have multiple databases to dump 
