@@ -18,20 +18,17 @@ PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/local/mysql/bin:/root/bin
 
 ENV="$(which env)"
 WHICH="$(${ENV} which which)"
-LOGGER="$(${WHICH} logger)"
 ECHO="$(${WHICH} echo)"
 CAT="$(${WHICH} cat)"
 BASENAME="$(${WHICH} basename)"
 DATEC="$(${WHICH} date)"
 DU="$(${WHICH} du)"
-EXPR="$(${WHICH} expr)"
 FIND="$(${WHICH} find)"
 RM="$(${WHICH} rm)"
 MYSQL="$(${WHICH} mysql)"
 MYSQLDUMP="$(${WHICH} mysqldump)"
 GZIP="$(${WHICH} gzip)"
 BZIP2="$(${WHICH} bzip2)"
-CP="$(${WHICH} cp)"
 HOSTNAMEC="$(${WHICH} hostname)"
 SED="$(${WHICH} sed)"
 GREP="$(${WHICH} grep)"
@@ -545,11 +542,12 @@ fi
 if [[ ${DBNAMES} = all ]] ; then
 	DBNAMES="$(${MYSQL} \
 	--defaults-extra-file=<(${ECHO} $'[client]\npassword='${PASSWORD}) \
-	--user=${USERNAME} \
-	--host=${DBHOST} \
-	--port=${DBPORT} \
+	--user="${USERNAME}" \
+	--host="${DBHOST}" \
+	--port="${DBPORT}" \
 	--batch \
-	--skip-column-names -e "show databases"\
+	--skip-column-names \
+	-e "show databases"\
 	| ${SED} 's# #%#g')"
 
 	# If DBs are excluded
