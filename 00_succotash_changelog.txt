@@ -1,3 +1,6 @@
+VER 2.1 (2022-03-10)
+     - move from gitlab to github and change some names so the project becomes more personal
+
 VER 2.1 (2021-12-14)
      - simplify the main backup case
      - dandify mysql and mysqldump options
